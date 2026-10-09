@@ -1,0 +1,4 @@
+nicho,canal
+# Una fila por canal. Nichos válidos: desarrollo-personal, salud-mental, negocios, finanzas-personales
+# El canal puede ser @usuario, la URL del canal o su id (UC...). Ejemplo:
+# desarrollo-personal,@usuario-del-canal

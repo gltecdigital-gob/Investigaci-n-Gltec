@@ -1,0 +1,35 @@
+name: Ingesta diaria
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # 06:00 en Ciudad de México
+  workflow_dispatch:
+    inputs:
+      paginas:
+        description: "Páginas de 50 videos por canal (1 a 10)"
+        default: "1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ingesta
+  cancel-in-progress: false
+
+jobs:
+  ingesta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ingesta -- "$PAGINAS"
+        env:
+          PAGINAS: ${{ inputs.paginas || '1' }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
